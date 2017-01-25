@@ -2,4 +2,23 @@
     <string name="app_name">SimpleTodo</string>
     <string name="enter_new_item">Enter a new Item</string>
     <string name="add_item">Add Item</string>
+    <string name="task_name">Task Name</string>
+    <string name="due_date">Due Date</string>
+    <string name="task_notes">Task Notes</string>
+    <string name="priority_level">Priority Level</string>
+    <string name="status">Status</string>
+    <string name="dd_mm_yyyy">dd/mm/yyyy</string>
+    <string name="notes">notes</string>
+    <string name="name">name</string>
+
+    <string-array name="task_priority">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
+    
+    <string-array name="task_status">
+        <item>To-do</item>
+        <item>Done</item>
+    </string-array>
 </resources>
