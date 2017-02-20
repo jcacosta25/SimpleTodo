@@ -1,11 +1,14 @@
 package com.example.juancacosta.simpletodo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Juan C. Acosta on 1/25/2017.
  *
  */
 
-class Todo {
+class Todo implements Parcelable {
     int _id;
     String _name;
     String _date;
@@ -80,4 +83,40 @@ class Todo {
     void setStatus(int _status) {
         this._status = _status;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this._id);
+        dest.writeString(this._name);
+        dest.writeString(this._date);
+        dest.writeString(this._notes);
+        dest.writeInt(this._priority);
+        dest.writeInt(this._status);
+    }
+
+    protected Todo(Parcel in) {
+        this._id = in.readInt();
+        this._name = in.readString();
+        this._date = in.readString();
+        this._notes = in.readString();
+        this._priority = in.readInt();
+        this._status = in.readInt();
+    }
+
+    public static final Parcelable.Creator<Todo> CREATOR = new Parcelable.Creator<Todo>() {
+        @Override
+        public Todo createFromParcel(Parcel source) {
+            return new Todo(source);
+        }
+
+        @Override
+        public Todo[] newArray(int size) {
+            return new Todo[size];
+        }
+    };
 }

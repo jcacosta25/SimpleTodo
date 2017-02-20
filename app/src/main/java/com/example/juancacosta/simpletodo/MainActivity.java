@@ -38,29 +38,18 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
         lvItems.addOnItemTouchListener(new RecyclerTouchListener(this, lvItems, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
+                FragmentManager fm = getSupportFragmentManager();
+                NewTaskDialogFragment newTask = new NewTaskDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("Edit",todoList.get(position));
+                bundle.putString("title", "Edit: "+todoList.get(position).getName());
+                newTask.setArguments(bundle);
+                newTask.show(fm, "fragment_todo_add");
             }
 
             @Override
             public void onLongClick(View view, final int position) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertDialogBuilder.setTitle("\"Are you sure you want to delete this task  ?\"");
-                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        itemsAdapter.remove(position);
-                        db.deleteTodo(todoList.get(position - 1));
-                    }
-                });
-                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                deleteItem(position);
             }
         }));
     }
@@ -71,6 +60,28 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
         newTask.show(fm, "fragment_todo_add");
     }
 
+    public void deleteItem(final int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        alertDialogBuilder.setTitle("\"Are you sure you want to delete this task  ?\"");
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                itemsAdapter.remove(position);
+                db.deleteTodo(todoList.get(position));
+                readItems();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     private void readItems() {
         todoList = db.getAllTodo();
     }
@@ -79,6 +90,14 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
     public void onFinishNewTaskDialog(Todo todo) {
         itemsAdapter.add(todo);
         db.addTodo(todo);
+        readItems();
+    }
+
+    @Override
+    public void onFinishEditTaskDialog(Todo todo) {
+        itemsAdapter.notifyDataSetChanged();
+        db.updateTodo(todo);
+        readItems();
     }
 
     interface ClickListener {

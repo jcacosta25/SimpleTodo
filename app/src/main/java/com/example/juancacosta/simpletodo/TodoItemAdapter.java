@@ -33,7 +33,12 @@ class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tvItem.setText(todoList.get(position).getName());
+        holder.tvItemName.setText(todoList.get(position).getName());
+        String[] priority = context.getResources().getStringArray(R.array.task_priority);
+        int[] color = context.getResources().getIntArray(R.array.task_color);
+        holder.tvItemPriority.setText(priority[todoList.get(position).getPriority()]);
+        holder.itemView.setBackgroundColor(color[todoList.get(position).getPriority()]);
+
     }
 
     @Override
@@ -52,11 +57,15 @@ class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvItem;
+        TextView tvItemName,tvItemPriority;
+        View itemView;
+
 
         ViewHolder(View view) {
             super(view);
-            tvItem = (TextView) view.findViewById(R.id.tvItemName);
+            itemView = view;
+            tvItemName = (TextView) view.findViewById(R.id.tvItemName);
+            tvItemPriority = (TextView) view.findViewById(R.id.tvItemPriority);
         }
     }
 }

@@ -16,6 +16,11 @@
         <item>Medium</item>
         <item>Low</item>
     </string-array>
+    <integer-array name="task_color">
+        <item>@color/colorHigh</item>
+        <item>@color/colorMedium</item>
+        <item>@color/colorLow</item>
+    </integer-array>
     
     <string-array name="task_status">
         <item>To-do</item>

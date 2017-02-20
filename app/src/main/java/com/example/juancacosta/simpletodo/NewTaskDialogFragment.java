@@ -19,6 +19,8 @@ public class NewTaskDialogFragment extends DialogFragment {
 
     EditText taskName, taskDate, taskNotes;
     Spinner taskPriority, taskStatus;
+    String[] action = {"Create","Edit"};
+
 
     public NewTaskDialogFragment() {
     }
@@ -35,6 +37,7 @@ public class NewTaskDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String title = getArguments().getString("title");
+        Todo item = getArguments().getParcelable("Edit");
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(title);
 
@@ -47,21 +50,47 @@ public class NewTaskDialogFragment extends DialogFragment {
 
         alertDialogBuilder.setView(view);
 
-        alertDialogBuilder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // on success
-                Todo todo = new Todo();
-                todo.setName(taskName.getText().toString());
-                todo.setDate(taskDate.getText().toString());
-                todo.setNotes(taskNotes.getText().toString());
-                todo.setPriority(taskPriority.getSelectedItemPosition());
-                todo.setStatus(taskStatus.getSelectedItemPosition());
-                NewTaskDialogListener listener = (NewTaskDialogListener) getActivity();
-                listener.onFinishNewTaskDialog(todo);
+        if(item != null){
+            taskName.setText(item.getName());
+            taskDate.setText(item.getDate());
+            taskNotes.setText(item.getNotes());
+            taskPriority.setSelection(item.getPriority());
+            taskStatus.setSelection(item.getStatus());
+            alertDialogBuilder.setPositiveButton(action[1], new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // on success
+                    Todo todo = new Todo();
+                    todo.setName(taskName.getText().toString());
+                    todo.setDate(taskDate.getText().toString());
+                    todo.setNotes(taskNotes.getText().toString());
+                    todo.setPriority(taskPriority.getSelectedItemPosition());
+                    todo.setStatus(taskStatus.getSelectedItemPosition());
+                    NewTaskDialogListener listener = (NewTaskDialogListener) getActivity();
+                    listener.onFinishEditTaskDialog(todo);
 
-            }
-        });
+
+                }
+            });
+
+        } else {
+            alertDialogBuilder.setPositiveButton(action[0], new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // on success
+                    Todo todo = new Todo();
+                    todo.setName(taskName.getText().toString());
+                    todo.setDate(taskDate.getText().toString());
+                    todo.setNotes(taskNotes.getText().toString());
+                    todo.setPriority(taskPriority.getSelectedItemPosition());
+                    todo.setStatus(taskStatus.getSelectedItemPosition());
+                    NewTaskDialogListener listener = (NewTaskDialogListener) getActivity();
+                    listener.onFinishNewTaskDialog(todo);
+
+                }
+            });
+
+        }
 
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -76,6 +105,7 @@ public class NewTaskDialogFragment extends DialogFragment {
 
     public interface NewTaskDialogListener {
         void onFinishNewTaskDialog(Todo todo);
+        void onFinishEditTaskDialog(Todo todo);
     }
 
 
