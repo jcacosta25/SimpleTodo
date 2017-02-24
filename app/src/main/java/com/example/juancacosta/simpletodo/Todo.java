@@ -11,20 +11,31 @@ import android.os.Parcelable;
 
 public class Todo extends BaseObservable implements Parcelable  {
 
-    @Bindable
-    int _id;
-    @Bindable
-    String _name;
-    @Bindable
-    String _date;
-    @Bindable
-    String _notes;
-    @Bindable
-    int _priority;
-    @Bindable
-    int _status;
+    public static final Parcelable.Creator<Todo> CREATOR = new Parcelable.Creator<Todo>() {
+        @Override
+        public Todo createFromParcel(Parcel source) {
+            return new Todo(source);
+        }
 
-    public Todo() {
+        @Override
+        public Todo[] newArray(int size) {
+            return new Todo[size];
+        }
+    };
+    @Bindable
+    private int _id;
+    @Bindable
+    private String _name;
+    @Bindable
+    private String _date;
+    @Bindable
+    private String _notes;
+    @Bindable
+    private int _priority;
+    @Bindable
+    private int _status;
+
+    Todo() {
     }
 
     public Todo(String _name, String _date, String _notes, int _priority, int _status) {
@@ -42,6 +53,15 @@ public class Todo extends BaseObservable implements Parcelable  {
         this._notes = _notes;
         this._priority = _priority;
         this._status = _status;
+    }
+
+    protected Todo(Parcel in) {
+        this._id = in.readInt();
+        this._name = in.readString();
+        this._date = in.readString();
+        this._notes = in.readString();
+        this._priority = in.readInt();
+        this._status = in.readInt();
     }
 
     public int getId() {
@@ -112,25 +132,4 @@ public class Todo extends BaseObservable implements Parcelable  {
         dest.writeInt(this._priority);
         dest.writeInt(this._status);
     }
-
-    protected Todo(Parcel in) {
-        this._id = in.readInt();
-        this._name = in.readString();
-        this._date = in.readString();
-        this._notes = in.readString();
-        this._priority = in.readInt();
-        this._status = in.readInt();
-    }
-
-    public static final Parcelable.Creator<Todo> CREATOR = new Parcelable.Creator<Todo>() {
-        @Override
-        public Todo createFromParcel(Parcel source) {
-            return new Todo(source);
-        }
-
-        @Override
-        public Todo[] newArray(int size) {
-            return new Todo[size];
-        }
-    };
 }

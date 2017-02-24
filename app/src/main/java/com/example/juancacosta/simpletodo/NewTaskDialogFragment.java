@@ -85,8 +85,6 @@ public class NewTaskDialogFragment extends DialogFragment {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
             try {
                 Date date = formatter.parse(item.getDate());
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
                 year = date.getYear();
                 month = date.getMonth();
                 day = date.getDay();
@@ -103,7 +101,7 @@ public class NewTaskDialogFragment extends DialogFragment {
                     item.setPriority(taskPriority.getSelectedItemPosition());
                     item.setStatus(taskStatus.getSelectedItemPosition());
                     NewTaskDialogListener listener = (NewTaskDialogListener) getActivity();
-                    listener.onFinishEditTaskDialog(item,position);
+                    listener.onFinishEditTaskDialog(item, position);
 
 
                 }
@@ -139,20 +137,14 @@ public class NewTaskDialogFragment extends DialogFragment {
         return alertDialogBuilder.create();
     }
 
-    public interface NewTaskDialogListener {
-        void onFinishNewTaskDialog(Todo todo);
-
-        void onFinishEditTaskDialog(Todo todo, int position);
-    }
-
     public void DateDialog() {
 
         DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                monthOfYear = monthOfYear+1;
-                if(monthOfYear >= 10) {
+                monthOfYear = monthOfYear + 1;
+                if (monthOfYear >= 10) {
                     taskDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
                 } else {
                     taskDate.setText(dayOfMonth + "/0" + monthOfYear + "/" + year);
@@ -164,6 +156,12 @@ public class NewTaskDialogFragment extends DialogFragment {
 
         dpDialog.show();
 
+    }
+
+    public interface NewTaskDialogListener {
+        void onFinishNewTaskDialog(Todo todo);
+
+        void onFinishEditTaskDialog(Todo todo, int position);
     }
 
 

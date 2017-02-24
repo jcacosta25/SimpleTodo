@@ -11,17 +11,18 @@ import android.widget.TextView;
 
 public class DataBindingAdapter {
 
-    private DataBindingAdapter(){}
+    private DataBindingAdapter() {
+    }
 
     @BindingAdapter("priorityBackground")
-    public static void setPriorityBackground(View view, int priority){
+    public static void setPriorityBackground(View view, int priority) {
         Context context = view.getContext();
         int[] color = context.getResources().getIntArray(R.array.task_color);
         view.setBackgroundColor(color[priority]);
     }
 
     @BindingAdapter("priorityText")
-    public static void setPriorityText(TextView text, int priority){
+    public static void setPriorityText(TextView text, int priority) {
         Context context = text.getContext();
         String[] priorityText = context.getResources().getStringArray(R.array.task_priority);
         text.setText(priorityText[priority]);

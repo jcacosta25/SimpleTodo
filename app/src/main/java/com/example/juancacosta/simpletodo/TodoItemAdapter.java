@@ -19,7 +19,7 @@ import java.util.Comparator;
 class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
 
     private ArrayList<Todo> todoList = new ArrayList<>();
-    private Animation add,remove;
+    private Animation add, remove;
 
     TodoItemAdapter(ArrayList<Todo> todoList) {
         Collections.sort(todoList, new Comparator<Todo>() {
@@ -39,7 +39,7 @@ class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),R.layout.element_todo_adapter,parent,false);
+        ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.element_todo_adapter, parent, false);
         return new ViewHolder(binding);
     }
 
@@ -47,7 +47,7 @@ class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Todo todo = todoList.get(position);
         ViewDataBinding binding = holder.getBinding();
-        binding.setVariable(com.example.juancacosta.simpletodo.BR.todo,todo);
+        binding.setVariable(com.example.juancacosta.simpletodo.BR.todo, todo);
     }
 
     @Override
@@ -75,7 +75,7 @@ class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
             binding.executePendingBindings();
         }
 
-        ViewDataBinding getBinding(){
+        ViewDataBinding getBinding() {
             return binding;
         }
     }

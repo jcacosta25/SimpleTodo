@@ -3,14 +3,14 @@
     <item
         android:id="@+id/clasic"
         android:orderInCategory="100"
-        android:title="Clasic" />
+        android:title="@string/clasic" />
     <item
         android:id="@+id/red"
         android:orderInCategory="100"
-        android:title="Red" />
+        android:title="@string/red" />
     <item
         android:id="@+id/dark"
         android:orderInCategory="100"
-        android:title="Dark" />
+        android:title="@string/dark" />
 
 </menu>

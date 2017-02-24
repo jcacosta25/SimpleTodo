@@ -139,7 +139,7 @@ class TodoDataBaseHelper extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
-    void updateTodo(Todo todo){
+    void updateTodo(Todo todo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_TODO_NAME, todo.getName());

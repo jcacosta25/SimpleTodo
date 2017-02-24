@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
             setupWindowAnimations();
         }
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-        int theme = pref.getInt("Theme",R.style.AppTheme);
+        int theme = pref.getInt("Theme", R.style.AppTheme);
         setTheme(theme);
         setContentView(R.layout.activity_main);
         readItems();
@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
                 NewTaskDialogFragment newTask = new NewTaskDialogFragment();
                 Bundle bundle = new Bundle();
                 Todo todo = todoList.get(position);
-                bundle.putParcelable("Edit",todo);
-                bundle.putString("title", "Edit: "+todoList.get(position).getName());
-                bundle.putInt("position",position);
+                bundle.putParcelable("Edit", todo);
+                bundle.putString("title", "Edit: " + todoList.get(position).getName());
+                bundle.putInt("position", position);
                 newTask.setArguments(bundle);
                 newTask.show(fm, "fragment_todo_add");
             }
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
         newTask.show(fm, "fragment_todo_add");
     }
 
-    public void deleteItem(final int position){
+    public void deleteItem(final int position) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilder.setTitle("\"Are you sure you want to delete this task  ?\"");
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -113,11 +113,53 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
     }
 
     @Override
-    public void onFinishEditTaskDialog(Todo todo,int position) {
+    public void onFinishEditTaskDialog(Todo todo, int position) {
         db.updateTodo(todo);
         itemsAdapter.notifyDataSetChanged();
         itemsAdapter.notifyItemChanged(position);
         readItems();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(slide);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        SharedPreferences.Editor editor = pref.edit();
+        switch (item.getItemId()) {
+            case R.id.clasic:
+                editor.putInt("Theme", R.style.AppTheme);
+                editor.apply();
+                MainActivity.this.recreate();
+                return true;
+            case R.id.red:
+                editor.putInt("Theme", R.style.AppTheme_Red);
+                editor.apply();
+                MainActivity.this.recreate();
+                return true;
+            case R.id.dark:
+                editor.putInt("Theme", R.style.AppTheme_Dark);
+                editor.apply();
+                MainActivity.this.recreate();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     interface ClickListener {
@@ -169,47 +211,5 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void setupWindowAnimations() {
-        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setExitTransition(slide);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_menu, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        SharedPreferences.Editor editor = pref.edit();
-        switch (item.getItemId()){
-            case R.id.clasic:
-                editor.putInt("Theme",R.style.AppTheme);
-                editor.commit();
-                MainActivity.this.recreate();
-                return true;
-            case R.id.red:
-                editor.putInt("Theme",R.style.AppTheme_Red);
-                editor.commit();
-                MainActivity.this.recreate();
-                return true;
-            case R.id.dark:
-                editor.putInt("Theme",R.style.AppTheme_Dark);
-                editor.commit();
-                MainActivity.this.recreate();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
     }
 }

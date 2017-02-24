@@ -10,6 +10,9 @@
     <string name="dd_mm_yyyy">dd/mm/yyyy</string>
     <string name="notes">notes</string>
     <string name="name">name</string>
+    <string name="clasic">Classic</string>
+    <string name="red">Red</string>
+    <string name="dark">Dark</string>
 
     <string-array name="task_priority">
         <item>High</item>
