@@ -1,13 +1,15 @@
 package com.example.juancacosta.simpletodo;
 
-import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.animation.Animation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Juan C. Acosta on 1/24/2017.
@@ -15,30 +17,37 @@ import java.util.ArrayList;
  */
 
 class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
-    private Context context;
-    private ArrayList<Todo> todoList = new ArrayList<>();
-    private LayoutInflater inflater;
 
-    TodoItemAdapter(Context context, ArrayList<Todo> todoList) {
-        this.context = context;
+    private ArrayList<Todo> todoList = new ArrayList<>();
+    private Animation add,remove;
+
+    TodoItemAdapter(ArrayList<Todo> todoList) {
+        Collections.sort(todoList, new Comparator<Todo>() {
+            @Override
+            public int compare(Todo todo, Todo t1) {
+                return Integer.valueOf(todo.getPriority()).compareTo(t1.getPriority());
+            }
+        });
+        Collections.sort(todoList, new Comparator<Todo>() {
+            @Override
+            public int compare(Todo todo, Todo t1) {
+                return t1.getDate().compareTo(todo.getDate());
+            }
+        });
         this.todoList = todoList;
-        inflater = LayoutInflater.from(context);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View convertView = inflater.inflate(R.layout.element_todo_adapter, parent, false);
-        return new ViewHolder(convertView);
+        ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),R.layout.element_todo_adapter,parent,false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tvItemName.setText(todoList.get(position).getName());
-        String[] priority = context.getResources().getStringArray(R.array.task_priority);
-        int[] color = context.getResources().getIntArray(R.array.task_color);
-        holder.tvItemPriority.setText(priority[todoList.get(position).getPriority()]);
-        holder.itemView.setBackgroundColor(color[todoList.get(position).getPriority()]);
-
+        Todo todo = todoList.get(position);
+        ViewDataBinding binding = holder.getBinding();
+        binding.setVariable(com.example.juancacosta.simpletodo.BR.todo,todo);
     }
 
     @Override
@@ -57,15 +66,17 @@ class TodoItemAdapter extends RecyclerView.Adapter<TodoItemAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvItemName,tvItemPriority;
-        View itemView;
 
+        private ViewDataBinding binding;
 
-        ViewHolder(View view) {
-            super(view);
-            itemView = view;
-            tvItemName = (TextView) view.findViewById(R.id.tvItemName);
-            tvItemPriority = (TextView) view.findViewById(R.id.tvItemPriority);
+        ViewHolder(ViewDataBinding view) {
+            super(view.getRoot());
+            binding = view;
+            binding.executePendingBindings();
+        }
+
+        ViewDataBinding getBinding(){
+            return binding;
         }
     }
 }

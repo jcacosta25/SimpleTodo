@@ -21,7 +21,7 @@
         <item>@color/colorMedium</item>
         <item>@color/colorLow</item>
     </integer-array>
-    
+
     <string-array name="task_status">
         <item>To-do</item>
         <item>Done</item>

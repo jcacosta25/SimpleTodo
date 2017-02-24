@@ -1,22 +1,30 @@
 package com.example.juancacosta.simpletodo;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 /**
  * Created by Juan C. Acosta on 1/25/2017.
  *
  */
 
-class Todo implements Parcelable {
+public class Todo extends BaseObservable implements Parcelable  {
+
+    @Bindable
     int _id;
+    @Bindable
     String _name;
+    @Bindable
     String _date;
+    @Bindable
     String _notes;
+    @Bindable
     int _priority;
+    @Bindable
     int _status;
 
-    Todo() {
+    public Todo() {
     }
 
     public Todo(String _name, String _date, String _notes, int _priority, int _status) {
@@ -42,6 +50,7 @@ class Todo implements Parcelable {
 
     public void setId(int _id) {
         this._id = _id;
+        notifyPropertyChanged(com.example.juancacosta.simpletodo.BR.id);
     }
 
     public String getName() {
@@ -50,38 +59,43 @@ class Todo implements Parcelable {
 
     public void setName(String _name) {
         this._name = _name;
+        notifyPropertyChanged(com.example.juancacosta.simpletodo.BR.name);
     }
 
-    String getDate() {
+    public String getDate() {
         return _date;
     }
 
-    void setDate(String _date) {
+    public void setDate(String _date) {
         this._date = _date;
+        notifyPropertyChanged(com.example.juancacosta.simpletodo.BR.date);
     }
 
-    String getNotes() {
+    public String getNotes() {
         return _notes;
     }
 
-    void setNotes(String _notes) {
+    public void setNotes(String _notes) {
         this._notes = _notes;
+        notifyPropertyChanged(com.example.juancacosta.simpletodo.BR.notes);
     }
 
-    int getPriority() {
+    public int getPriority() {
         return _priority;
     }
 
-    void setPriority(int _priority) {
+    public void setPriority(int _priority) {
         this._priority = _priority;
+        notifyPropertyChanged(com.example.juancacosta.simpletodo.BR.priority);
     }
 
-    int getStatus() {
+    public int getStatus() {
         return _status;
     }
 
-    void setStatus(int _status) {
+    public void setStatus(int _status) {
         this._status = _status;
+        notifyPropertyChanged(com.example.juancacosta.simpletodo.BR.status);
     }
 
     @Override

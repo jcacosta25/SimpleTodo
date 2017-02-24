@@ -25,8 +25,8 @@ class TodoDataBaseHelper extends SQLiteOpenHelper {
 
     // T0d0 Table Columns
     private static final String KEY_TODO_ID = "id";
-    private static final String KEY_TODO_NAME = "name";
     private static final String KEY_TODO_DATE = "date";
+    private static final String KEY_TODO_NAME = "name";
     private static final String KEY_TODO_NOTES = "notes";
     private static final String KEY_TODO_PRIORITY = "priority";
     private static final String KEY_TODO_STATUS = "status";
@@ -50,16 +50,16 @@ class TodoDataBaseHelper extends SQLiteOpenHelper {
                 + TABLE_TODO + "("
                 + KEY_TODO_ID + " INTEGER PRIMARY KEY," // and auto increment will be handled with                            primary key
                 + KEY_TODO_NAME + " TEXT NOT NULL,"
-                + KEY_TODO_NOTES + " TEXT,"
                 + KEY_TODO_DATE + " TEXT,"
+                + KEY_TODO_NOTES + " TEXT,"
                 + KEY_TODO_PRIORITY + " TEXT,"
                 + KEY_TODO_STATUS + " TEXT );";
         String CREATE_TODO_TABLE = "CREATE TABLE " + TABLE_TODO +
                 "(" +
                 KEY_TODO_ID + " INTEGER PRIMARY KEY," +
                 KEY_TODO_NAME + " TEXT," +
-                KEY_TODO_NOTES + " TEXT," +
                 KEY_TODO_DATE + " TEXT," +
+                KEY_TODO_NOTES + " TEXT," +
                 KEY_TODO_PRIORITY + " TEXT," +
                 KEY_TODO_STATUS + " TEXT," +
                 ")";
@@ -139,7 +139,7 @@ class TodoDataBaseHelper extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
-    public int updateTodo(Todo todo) {
+    void updateTodo(Todo todo){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_TODO_NAME, todo.getName());
@@ -147,8 +147,8 @@ class TodoDataBaseHelper extends SQLiteOpenHelper {
         values.put(KEY_TODO_NOTES, todo.getNotes());
         values.put(KEY_TODO_PRIORITY, todo.getPriority());
         values.put(KEY_TODO_STATUS, todo.getStatus());
-
-        return db.update(TABLE_TODO, values, KEY_TODO_ID + " = ?", new String[]{String.valueOf(todo.getId())});
+        db.update(TABLE_TODO, values, KEY_TODO_ID + " = ?", new String[]{String.valueOf(todo.getId())});
+        db.close();
     }
 
     void deleteTodo(Todo todo) {
@@ -157,6 +157,5 @@ class TodoDataBaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(todo.getId())});
         db.close();
     }
-
 
 }

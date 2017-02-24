@@ -3,12 +3,21 @@ package com.example.juancacosta.simpletodo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,19 +25,27 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements NewTaskDialogFragment.NewTaskDialogListener {
-    ArrayList<Todo> todoList = new ArrayList<>();
-    TodoItemAdapter itemsAdapter;
-    RecyclerView lvItems;
-    TodoDataBaseHelper db;
+    private ArrayList<Todo> todoList = new ArrayList<>();
+    private TodoItemAdapter itemsAdapter;
+    private RecyclerView lvItems;
+    private TodoDataBaseHelper db;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = new TodoDataBaseHelper(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setupWindowAnimations();
+        }
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        int theme = pref.getInt("Theme",R.style.AppTheme);
+        setTheme(theme);
         setContentView(R.layout.activity_main);
         readItems();
         lvItems = (RecyclerView) findViewById(R.id.lvItems);
-        itemsAdapter = new TodoItemAdapter(getApplicationContext(), todoList);
+        itemsAdapter = new TodoItemAdapter(todoList);
+        itemsAdapter.notifyDataSetChanged();
         lvItems.setAdapter(itemsAdapter);
         lvItems.setLayoutManager(new LinearLayoutManager(this));
         setupListListener();
@@ -41,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
                 FragmentManager fm = getSupportFragmentManager();
                 NewTaskDialogFragment newTask = new NewTaskDialogFragment();
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("Edit",todoList.get(position));
+                Todo todo = todoList.get(position);
+                bundle.putParcelable("Edit",todo);
                 bundle.putString("title", "Edit: "+todoList.get(position).getName());
+                bundle.putInt("position",position);
                 newTask.setArguments(bundle);
                 newTask.show(fm, "fragment_todo_add");
             }
@@ -66,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                itemsAdapter.remove(position);
                 db.deleteTodo(todoList.get(position));
+                itemsAdapter.remove(position);
                 readItems();
             }
         });
@@ -94,9 +113,10 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
     }
 
     @Override
-    public void onFinishEditTaskDialog(Todo todo) {
-        itemsAdapter.notifyDataSetChanged();
+    public void onFinishEditTaskDialog(Todo todo,int position) {
         db.updateTodo(todo);
+        itemsAdapter.notifyDataSetChanged();
+        itemsAdapter.notifyItemChanged(position);
         readItems();
     }
 
@@ -149,5 +169,47 @@ public class MainActivity extends AppCompatActivity implements NewTaskDialogFrag
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(slide);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        SharedPreferences.Editor editor = pref.edit();
+        switch (item.getItemId()){
+            case R.id.clasic:
+                editor.putInt("Theme",R.style.AppTheme);
+                editor.commit();
+                MainActivity.this.recreate();
+                return true;
+            case R.id.red:
+                editor.putInt("Theme",R.style.AppTheme_Red);
+                editor.commit();
+                MainActivity.this.recreate();
+                return true;
+            case R.id.dark:
+                editor.putInt("Theme",R.style.AppTheme_Dark);
+                editor.commit();
+                MainActivity.this.recreate();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 }

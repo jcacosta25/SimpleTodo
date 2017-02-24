@@ -62,6 +62,7 @@
         android:imeOptions="actionDone"
         android:inputType="text" />
 
+
     <TextView
         android:id="@+id/lbl_todo_priority"
         android:layout_width="match_parent"
